@@ -1,6 +1,6 @@
 ## Installing OpenShift into an SEA
 
-###Pre-requisites:
+### Pre-requisites:
 * You have a SEA environment v.1.3.2 or later 
 * You have account organization admin access to this environment
 * You have created your SEA environment with 3 availability zones
@@ -11,7 +11,7 @@ We have created a dedicated OpenShift Account called `OpenShiftInstaller` during
 will be using this account to install Red Hat OpenShift v.4.7 into AWS Protected B environment.
 You can choose to create a new account or use one of the existing SEA accounts (i.e. DEV). 
 
-##A. Preparing for installation
+## A. Preparing for installation
 1. Log into your aws account using Account Administrator role. In this example
 we use SSO to easily switch between accounts
 
@@ -66,7 +66,7 @@ For `Default output format` type in `json`
 `$ git clone THIS_REPO
 `
 12. Create a folder for storing OpenShift configuration. We call ours "clusterconfigs".
-###B. Generate OpenShift cluster configs
+### B. Generate OpenShift cluster configs
 For more information refer to: https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html
 1. Retrieve install-config.yaml  
 `$ cp ./openshift_aws_sea/install-config.yaml ./clusterconfigs/`  
@@ -100,7 +100,7 @@ file is set to `false`.
     `jq -r .infraID ~/clusterconfigs/metadata.json`  
     Please save `infraID`. In our example it will be `seaocp-2mtml`
 
-###C. Create a private DNS zone.
+### C. Create a private DNS zone.
 1. Log in as Account Organization Admin and then switch roles. For the `Account` specify the accountID 
 of OpenShiftInstall account (OpenShiftInstaller) and for the `Role` type in `PBMMAccel-PipelineRole` 
  ![Alt text](images/switch_roles_aws.png?raw=true "Switch Roles")	
@@ -151,9 +151,9 @@ to do that.
 
 7. IMPORTANT: Exit EC2 console to remove ENV variables we just added
 
-#Update SCP
+## D. Update SCP
 
 
 
-##Installing OpenShift
+## E. Installing OpenShift
 

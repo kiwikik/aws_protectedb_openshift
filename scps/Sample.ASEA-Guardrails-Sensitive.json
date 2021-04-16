@@ -2,7 +2,7 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "DenyNetworkPBMMONLY",
+      "Sid": "DenyNetworkSensitive",
       "Effect": "Deny",
       "Action": [
         "ec2:AcceptVpcPeeringConnection",
@@ -36,6 +36,12 @@
         "ec2:DetachInternetGateway",
         "ec2:DetachVpnGateway",
         "ec2:DisassociateRouteTable",
+        "ec2:AllocateAddress",
+        "ec2:AssociateAddress",
+        "ec2:ModifyImageAttribute",
+        "ec2:ModifySnapshotAttribute",
+        "rds:ModifyDBSnapshotAttribute",
+        "rds:ModifyDBClusterSnapshotAttribute",
         "globalaccelerator:Create*",
         "globalaccelerator:Update*",
         "kms:ScheduleKeyDeletion",
@@ -49,8 +55,6 @@
         "iam:UpdateGroup",
         "iam:DeleteRolePermissionsBoundary",
         "iam:AddUserToGroup",
-        "iam:UpdateAccountPasswordPolicy",
-        "iam:DeleteAccountPasswordPolicy",
         "iam:TagUser",
         "networkmanager:Create*",
         "networkmanager:Update*",
@@ -63,12 +67,9 @@
       "Condition": {
         "ArnNotLike": {
           "aws:PrincipalArn": [
-            "arn:aws:iam::*:role/AWSCloudFormationStackSetExecutionRole",
-            "arn:aws:iam::*:role/StackSet-AWS-Landing-Zone*",
-            "arn:aws:iam::*:role/PBMMAccel-*",
-            "arn:aws:iam::*:role/PBMMOps-*",
-            "arn:aws:iam::*:user/OpenshiftInstallerUser",
-            "arn:aws:iam::*:user/cluster1-5fv7r-*"
+            "arn:aws:iam::*:role/${ACCELERATOR_PREFIX}*",
+            "arn:aws:iam::*:role/${ACCELERATOR_NAME}Ops-*",
+            "arn:aws:iam::*:user/OpenshiftInstallerUser"
           ]
         }
       }
@@ -76,28 +77,19 @@
     {
       "Sid": "ScopeSpecificGlobalActionsToCanadaUSE1",
       "Effect": "Deny",
-      "Action": [
-        "acm:*",
-        "kms:*"
-      ],
+      "Action": ["acm:*", "kms:*"],
       "Resource": "*",
       "Condition": {
         "StringNotEquals": {
-          "aws:RequestedRegion": [
-            "ca-central-1",
-            "us-east-1"
-          ]
+          "aws:RequestedRegion": "${ADDL_REGIONS_B}"
         },
         "ArnNotLike": {
-          "aws:PrincipalARN": [
-            "arn:aws:iam::*:role/AWSCloudFormationStackSetExecutionRole",
-            "arn:aws:iam::*:role/PBMMAccel-*"
-          ]
+          "aws:PrincipalARN": ["arn:aws:iam::*:role/${ACCELERATOR_PREFIX}*"]
         }
       }
     },
     {
-      "Sid": "DenyAllOutsideCanadaPBMMONLY",
+      "Sid": "DenyAllOutsideCanadaSensitive",
       "Effect": "Deny",
       "NotAction": [
         "a4b:*",
@@ -144,16 +136,12 @@
       "Resource": "*",
       "Condition": {
         "StringNotEquals": {
-          "aws:RequestedRegion": [
-            "ca-central-1"
-          ]
+          "aws:RequestedRegion": "${ADDL_REGIONS_A}"
         },
         "ArnNotLike": {
           "aws:PrincipalARN": [
-            "arn:aws:iam::*:role/AWSCloudFormationStackSetExecutionRole",
-            "arn:aws:iam::*:role/PBMMAccel-*",
-            "arn:aws:iam::*:user/OpenshiftInstallerUser",
-            "arn:aws:iam::*:user/seaocp-2mtml-*"
+            "arn:aws:iam::*:role/${ACCELERATOR_PREFIX}*",
+             "arn:aws:iam::*:user/cluster1-5fv7r-*"
           ]
         }
       }

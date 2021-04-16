@@ -151,5 +151,9 @@ to do that.
 
 7. IMPORTANT: Exit EC2 console to remove ENV variables we just added
 
+#Update SCP
+
+
+
 ##Installing OpenShift
 

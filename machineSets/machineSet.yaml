@@ -1,0 +1,64 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: cluster1-5fv7r
+  name: cluster1-5fv7r-worker-ca-central-1b
+  namespace: openshift-machine-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: cluster1-5fv7r
+      machine.openshift.io/cluster-api-machineset: cluster1-5fv7r-worker-ca-central-1b
+
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: cluster1-5fv7r
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: cluster1-5fv7r-worker-ca-central-1b
+
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/worker: ""
+
+      providerSpec:
+        value:
+          ami:
+            id: ami-0f5825ef10c76de32
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+            - ebs:
+                iops: 0
+                volumeSize: 120
+                volumeType: gp2
+                encrypted: true
+                kmsKeyId: alias/PBMMAccel-EBS-Key-AB02994E
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: dev1occSGStack-WorkerInstanceProfile-S2G29UYKLZ7F
+          instanceType: m5.xlarge
+          kind: AWSMachineProviderConfig
+          placement:
+            availabilityZone: ca-central-1b
+            region: ca-central-1
+          securityGroups:
+            - filters:
+                - name: tag:Name
+                  values:
+                    - sg-0dfc857e14f70789b
+          subnet:
+            filters:
+              - name: tag:Name
+                values:
+                  - App_Dev_azb_net
+          tags:
+            - name: kubernetes.io/cluster/cluster1-5fv7r
+              value: owned
+          userDataSecret:
+            name: worker-user-data

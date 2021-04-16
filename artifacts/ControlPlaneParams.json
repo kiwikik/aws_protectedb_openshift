@@ -1,0 +1,78 @@
+[
+    {
+        "ParameterKey": "InfrastructureName",
+        "ParameterValue": "seaocp-9npqr"
+    },
+    {
+        "ParameterKey": "RhcosAmi",
+        "ParameterValue": "ami-01284e5815ce66a95"
+    },
+    {
+        "ParameterKey": "AutoRegisterDNS",
+        "ParameterValue": "yes"
+    },
+    {
+        "ParameterKey": "PrivateHostedZoneId",
+        "ParameterValue": "Z00906213QH1EY3N2CHJE"
+    },
+    {
+        "ParameterKey": "PrivateHostedZoneName",
+        "ParameterValue": "seaocp.octank-demo.ca"
+    },
+    {
+        "ParameterKey": "Master0Subnet",
+        "ParameterValue": "subnet-0c04f026c9d39d967"
+    },
+    {
+        "ParameterKey": "Master1Subnet",
+        "ParameterValue": "subnet-0e20aa15e736613e9"
+    },
+    {
+        "ParameterKey": "Master2Subnet",
+        "ParameterValue": "subnet-016e862fa2a18a85f"
+    },
+    {
+        "ParameterKey": "MasterSecurityGroupId",
+        "ParameterValue": "sg-0dc7de6a995c76234"
+    },
+    {
+        "ParameterKey": "IgnitionLocation",
+        "ParameterValue": "https://api-int.seaocp.octank-demo.ca:22623/config/master"
+    },
+    {
+        "ParameterKey": "CertificateAuthorities",
+        "ParameterValue": "data:text/plain;charset=utf-8;base64,LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFRENDQWZpZ0F3SUJBZ0lJRStONUxZVEVFaHd3RFFZSktvWklodmNOQVFFTEJRQXdKakVTTUJBR0ExVUUKQ3hNSmIzQmxibk5vYVdaME1SQXdEZ1lEVlFRREV3ZHliMjkwTFdOaE1CNFhEVEl4TURNeE9ERTFOVGt5T0ZvWApEVE14TURNeE5qRTFOVGt5T0Zvd0pqRVNNQkFHQTFVRUN4TUpiM0JsYm5Ob2FXWjBNUkF3RGdZRFZRUURFd2R5CmIyOTBMV05oTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF0MDU5eFo0TGxZNlQKZVlmbmtSeG9xOEI1Q05CV0orcnltc21WcWVEelBHbnphQkZQSFlvMGZHbGlvV216M0cvRlFxckdZSVdEelBsVApEZTNnYlBuTTc4aXE4QTZwY05BYTFwOGJvQWl3OEJrMHBjVDhVRXB4YWxlaE1OeG03NS94WmJHTlNzQWN3WkZyCjdMYUFhOWxoSk9VbFZYM1Blc2R5Z3dSam9YeUpkKzIwYUp6MVFUSkNYTG1QQmVIVHUwT1VzdU5uZkhwVTVKcXgKTkRUeHBxQ0YzVWc0YmtIZlNEcjBDRGhZV3dVb1EybHNVYm9DL1hSUGdINlQrUlVsVWNrQ3NFem5TZ1ZlMTcyOQpqcGkvVVVwWjRQR1RpNnRzYm9Vb0NldG0wTU5DOHIySENhZ2FjeG9JUVBmeWVuTnIzc25WeTd0RFJXckZhVjFvClZNaUdtNWtFU1FJREFRQUJvMEl3UURBT0JnTlZIUThCQWY4RUJBTUNBcVF3RHdZRFZSMFRBUUgvQkFVd0F3RUIKL3pBZEJnTlZIUTRFRmdRVWcwamVyMCt4cmxXVnNxRU5RaWVZemgwMkVuSXdEUVlKS29aSWh2Y05BUUVMQlFBRApnZ0VCQUZscThIMXVVTm5zQ0hrdjlSN2NsOElzaVgzekxQLzZXRnI2TDRHUUh5LzdJNzJlK2cxRFJia2U0R3FSCjBMc3FNeWtBcVJpa2l5RlBhWXpCT3lzcHpGVXF5VDZZVitmSE5Gc3MvbHZYcThUL0srTGhWQzlxSkp6UXZ5MmUKUlZZQ1NxSzNGYWcxbHlvWnFTTFBOZnNXNkJpYm1iRFZOczIzQkRSWm85V2ZOUUVOb0taVjBYWGkxL1pwMFpMaApyQWs4a0k3L1o0ZDQ4VDN2TjVoOEdPN3Zmb2t2a3F1M1diNE1vQVB4aU13cGZxdkx4bVJqc2dBZXBBdS95Vk1UCjlZWHdCZ0tJU1JncnYrcjV1TldMem5wRlFmR0JzWFpXaUpyK2h1WTN4ZDljSk45OTRTV0lkNnpmbkhBOHBOQ2EKSWEvV2M0NXZZWWhIVWFMSm1GVzFwdytHOWRrPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+    },
+    {
+        "ParameterKey": "MasterInstanceProfileName",
+        "ParameterValue": "seaocpSGStack-MasterInstanceProfile-1I9HJ8NB6DIOK"
+    },
+    {
+        "ParameterKey": "MasterInstanceType",
+        "ParameterValue": "m5.xlarge"
+    },
+    {
+        "ParameterKey": "AutoRegisterELB",
+        "ParameterValue": "yes"
+    },
+    {
+        "ParameterKey": "RegisterNlbIpTargetsLambdaArn",
+        "ParameterValue": "arn:aws:lambda:ca-central-1:637326788629:function:seaocpOpenshiftNetworkStack-RegisterNlbIpTargets-D3WPIGRJIQC"
+    },
+    {
+        "ParameterKey": "ExternalApiTargetGroupArn",
+        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Exter-1583O7YW54ZJ/327bb63ffe91f60d"
+    }, 
+    {
+        "ParameterKey": "InternalApiTargetGroupArn",
+        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Inter-NN5WTRKD0E7D/66e1a038b6899a9d"
+    },
+    {
+        "ParameterKey": "InternalServiceTargetGroupArn",
+        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Inter-6OVHD0COKTD5/b58577923a2e06fd"
+    },
+    {
+        "ParameterKey": "KMSEbsKey",
+        "ParameterValue": "alias/PBMMAccel-EBS-Key-85987D9D"
+    }
+]

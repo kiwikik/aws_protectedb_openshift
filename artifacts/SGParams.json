@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "InfrastructureName",
+    "ParameterValue": "seaocp-9npqr"
+  },
+  {
+    "ParameterKey": "VpcCidr",
+    "ParameterValue": "10.2.0.0/16"
+  },
+  {
+    "ParameterKey": "PrivateSubnets",
+    "ParameterValue": "subnet-0c04f026c9d39d967,subnet-0e20aa15e736613e9,subnet-016e862fa2a18a85f"
+  },
+  {
+    "ParameterKey": "VpcId",
+    "ParameterValue": "vpc-09820d7e07cfc6bc8"
+  }
+]

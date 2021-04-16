@@ -1,0 +1,34 @@
+[
+    {
+        "ParameterKey": "ClusterName",
+        "ParameterValue": "seaocp"
+    },
+    {
+        "ParameterKey": "HostedZoneId",
+        "ParameterValue": "Z08906542XKPTC6351174"
+    },
+    {
+        "ParameterKey": "HostedZoneName",
+        "ParameterValue": "octank-demo.ca"
+    },
+    {
+        "ParameterKey": "InfrastructureName",
+        "ParameterValue": "seaocp-9npqr"
+    },
+    {
+        "ParameterKey": "PrivateSubnets",
+        "ParameterValue": "subnet-0c04f026c9d39d967,subnet-0e20aa15e736613e9,subnet-016e862fa2a18a85f"
+    },
+    {
+        "ParameterKey": "PublicSubnets",
+        "ParameterValue": "subnet-0236023db2c013d92,subnet-074f5635a83e41b46,subnet-0ab88380380ff6e91"
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-09820d7e07cfc6bc8"
+    },
+    {
+        "ParameterKey": "IntDns",
+        "ParameterValue": "Z00906213QH1EY3N2CHJE"
+    }
+]

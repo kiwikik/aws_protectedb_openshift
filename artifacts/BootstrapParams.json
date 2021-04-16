@@ -1,0 +1,55 @@
+[
+    {
+        "ParameterKey": "KMSEbsKey",
+        "ParameterValue": "alias/PBMMAccel-EBS-Key-85987D9D"
+    },
+    {
+        "ParameterKey": "InfrastructureName",
+        "ParameterValue": "seaocp-9npqr"
+    },
+    {
+        "ParameterKey": "RhcosAmi",
+        "ParameterValue": "ami-01284e5815ce66a95"
+    },
+    {
+        "ParameterKey": "AllowedBootstrapSshCidr",
+        "ParameterValue": "0.0.0.0/0"
+    },
+    {
+        "ParameterKey": "PublicSubnet",
+        "ParameterValue": "subnet-0c04f026c9d39d967"
+    },
+    {
+        "ParameterKey": "MasterSecurityGroupId",
+        "ParameterValue": "sg-0dc7de6a995c76234"
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-09820d7e07cfc6bc8"
+    },
+    {
+        "ParameterKey": "BootstrapIgnitionLocation",
+        "ParameterValue": "s3://seaocp-9npqr/bootstrap.ign"
+    },
+    {
+        "ParameterKey": "AutoRegisterELB",
+        "ParameterValue": "yes"
+    },
+    {
+        "ParameterKey": "RegisterNlbIpTargetsLambdaArn",
+        "ParameterValue": "arn:aws:lambda:ca-central-1:637326788629:function:seaocpOpenshiftNetworkStack-RegisterNlbIpTargets-D3WPIGRJIQC"
+    },
+    {
+        "ParameterKey": "ExternalApiTargetGroupArn",
+        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Exter-1583O7YW54ZJ/327bb63ffe91f60d"
+    },
+    {
+        "ParameterKey": "InternalApiTargetGroupArn",
+        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Inter-NN5WTRKD0E7D/66e1a038b6899a9d"
+    },    
+    {
+        "ParameterKey": "InternalServiceTargetGroupArn",
+        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Inter-6OVHD0COKTD5/b58577923a2e06fd"
+    }
+
+]

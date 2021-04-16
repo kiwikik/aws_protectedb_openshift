@@ -66,7 +66,7 @@ For `Default output format` type in `json`
 `$ git clone THIS_REPO
 `
 12. Create a folder for storing OpenShift configuration. We call ours "clusterconfigs".
-### B. Generate OpenShift cluster configs
+### B. Generating OpenShift cluster configs
 For more information refer to: https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html
 1. Retrieve install-config.yaml  
 `$ cp ./openshift_aws_sea/install-config.yaml ./clusterconfigs/`  
@@ -100,7 +100,7 @@ file is set to `false`.
     `jq -r .infraID ~/clusterconfigs/metadata.json`  
     Please save `infraID`. In our example it will be `seaocp-2mtml`
 
-### C. Create a private DNS zone.
+### C. Creating a private DNS zone.
 1. Log in as Account Organization Admin and then switch roles. For the `Account` specify the accountID 
 of OpenShiftInstall account (OpenShiftInstaller) and for the `Role` type in `PBMMAccel-PipelineRole` 
  ![Alt text](images/switch_roles_aws.png?raw=true "Switch Roles")	
@@ -151,9 +151,52 @@ to do that.
 
 7. IMPORTANT: Exit EC2 console to remove ENV variables we just added
 
-## D. Update SCP
+## D. Updating SCP
+### Pre-requirements
+* You created an IAM user to run the installation (i.e.OpenShiftInstallUser)
+* You created ignition configuration files for OpenShift
+* You have the `infraID` for your future cluster
+* You have the ARN for the `OpenShiftInstallUser` 
 
+### Updating the policy
+Download the latest `ASEA-Guardrails-Sensitive.json` policy from the [Official AWS Sea Repo](https://github.com/aws-samples/aws-secure-environment-accelerator/tree/main/reference-artifacts/SCPs).
+Note: _file name might be different for the future releases of SEA. The sample of updated policy for this example
+can be located [here](./scps/Sample.ASEA-Guardrails-Sensitive.json)._
 
+1. Update the policy to allow OpenShiftInstallerUser to perform required operations in AWS.
+   1. For `"Sid": "DenyNetworkSensitive"` add ARN of your `OpenShiftInstallUser`
+      ![Alt text](images/scp-1.png?raw=true "AWS SCP 1")
+    2. For `"Sid": "DenyAllOutsideCanadaSensitive"` add ARN of your `infraID` in following format
+    `arn:aws:iam::637326xxxxx:user/<infraID>-*`  
+       Note: _OpenShift Cluster Credential operator will create additional IAM users to perform cluster tasks. Such as
+       update your private DNS zone records._
+       ![Alt text](images/scp-2.png?raw=true "AWS SCP 2")
+2. Login to AWS console as Account Organization Admin. Go to S3 console and select your SEA's central bucket. This was
+specified in your `config.json` file that you used to create your PBMM environment
+   (i.e. ` "central-bucket": "sea-aws-redhat-config"`). Select the `scp` folder. If you don't have this directory,
+   you need to create it.
+![Alt text](images/s3-bucket.png?raw=true "S3 Bucket") 
+3. Upload your modified `ASEA-Guardrails-Sensitive.json` policy file into the scp directory. Keep other options at their 
+defaults.
+   ![Alt text](images/upload-policy.png?raw=true "Policy Upload")
+   
+4. Re-run your Main State Machine 
+ ![Alt text](images/run-step-function.png?raw=true "Run Step Function")
+   
+5. Wait for approximately 20 minutes and verify that all the steps have completed successfully.
+![Alt text](images/state-machine-completed.png?raw=true "Step Function Completed")
+
+6. **Optional:** In your `AWS Organizations` Console verify that the policy was applied to the account
+![Alt text](images/verify-scp.png?raw=true "Verify SCP")
+   Select the `PBMMAccel-Guardrails-Sensitive` policy and inspect the content to make sure the two users were added.
 
 ## E. Installing OpenShift
-
+1. Login to AWS Management Console using `OpenShiftInstaller` account and connect to the Session Manager of EC2
+that you set up to run OpenShift installation
+![Alt text](images/aws-session-manager.png?raw=true "Verify SCP")
+   
+2. Verify your AWS identity  
+$ aws sts get-caller-identity   
+![Alt text](images/aws-caller-identity.png?raw=true "Verify AWS Identity")
+   
+3.

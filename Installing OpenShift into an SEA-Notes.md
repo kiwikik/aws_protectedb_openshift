@@ -1,4 +1,4 @@
-## Installing OpenShift into an SEA
+## Installing OpenShift 4.7 into AWS Protected B environment
 
 ### Pre-requisites:
 * You have a SEA environment v.1.3.2 or later 
@@ -11,37 +11,39 @@ We have created a dedicated OpenShift Account called `OpenShiftInstaller` during
 will be using this account to install Red Hat OpenShift v.4.7 into AWS Protected B environment.
 You can choose to create a new account or use one of the existing SEA accounts (i.e. DEV). 
 
+You must complete this installation within 24hrs. Otherwise OpenShift certificates will expire and you will have
+to regenerate ignition files and update your code to include the new infrastructure ID.
+
 ## A. Preparing for installation
 1. Log into your aws account using Account Administrator role. In this example
 we use SSO to easily switch between accounts
 
-2. Assume Pipeline Role. provide Pipeline role name: PBMMAccel-PipelineRole and your the account ID of
+2. Assume `PBMMAccel-PipelineRole`. In the switch role menu provide Pipeline role name: PBMMAccel-PipelineRole and your the account ID of
 the account that will be used to install OpenShift. In our example we use the ID of OpenShift install account.
 
-3. Go to IAM and create a user that will be used to install openshift. In this example we call it OpenShiftInstallUser
-  3a. Allow programatic access
-  3b. Attach existing policy "AdministratorAccess" ^1
-  3c. Record access key id and secret access key
-  AKIAZIY5DBAK66NTD4P3 / +8XWe5ox5ro8yNTNZyN5Fm/mB7v0quCHgkY8TqoE NOTE^1: you can create your own role following the official documentation for Red Hat OpenShift
+3. Go to IAM and create a user that will be used to install OpenShift. In this example we call it OpenShiftInstallUser
+   1. Allow programatic access
+   2. Attach existing policy "AdministratorAccess" ^1
+   3. Record access key id and secret access key  
+      NOTE: you can create your own role following the official documentation for Red Hat OpenShift
 
-4. Login to OpenShift Account and verify that user was created and have the appropriate role
+4. Login to `OpenShiftInstaller` Account and verify that the user was created and have correct permissions
 
-5. In openshift account create a public DNS zone. Note this zone is used for the installer
+5. In `OpenShiftInstaller` account create a public DNS zone. Note this zone is used for the installer
 and will not be publicly resolved. See post-installation step on how to allow external traffic
 to your cluser. In our example we use: octank-demo.ca
 
 6. Create a small EC2 instance. It will be used to install OpenShift. In our example we use t2.xlarge but smaller instances
-should work as well. The operating system type should be AWS Linux or RHEL. NOTE: if you choose RHEL you might need to isntall
-management utils. They are needed in order to be able to connect to the remote shell
+should work as well. The operating system type should be AWS Linux or RHEL.  
+   NOTE: if you choose RHEL you might need to isntall
+   management utils. They are needed in order to be able to connect to the remote shell
 
-7. In your web-browser go to cloud.redhat.com and log in with your Red Hat credentials
-7a. In Red Hat OpenShift Cluster Manager click Cluster Manager link
-7b. Select create cluster. In "Run It Yourself" section select AWS and then user-provisioned infrastructure
-7c. On the screen copy links for the latest version of OpenShift installer, Command line interface
-7d. Download and save the pull secret. It will be used to pull images from internal red hat registries
-https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
-https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-7e. Close this tab
+7. In your web-browser go to https://cloud.redhat.com and log in with your Red Hat credentials
+    7. In Red Hat OpenShift Cluster Manager click Cluster Manager link
+    7. Select create cluster. In "Run It Yourself" section select AWS and then user-provisioned infrastructure
+    7. On the screen copy links for the latest version of OpenShift installer and Command line interface
+    7. Download and save the pull secret. It will be used to pull images from internal red hat registries
+    7. Close this tab
 
 8. Connect to your EC2 instance that you created in step.X. In the console download openshift-install-linux.tar.gz
 and openshift-client-linux.tar.gz using links from the previous steps and extract them 
@@ -62,8 +64,8 @@ For `AWS Secret Access Key` provide secret access key for OpenShiftInstall user 
 For `Default region` type in `ca-central-1`  
 For `Default output format` type in `json`  
 
-11. Clone the current git current repository
-`$ git clone THIS_REPO
+11. Clone this repository  
+`$ git clone https://github.com/kiwikik/protectedb_openshift.git
 `
 12. Create a folder for storing OpenShift configuration. We call ours "clusterconfigs".
 ### B. Generating OpenShift cluster configs
@@ -191,12 +193,93 @@ defaults.
    Select the `PBMMAccel-Guardrails-Sensitive` policy and inspect the content to make sure the two users were added.
 
 ## E. Installing OpenShift
+
+### Pre-requirements
+* You have 3 App and 3 Web subnets in your accelerator environment
+* You cloned this repository to your EC2 instance
+
+The `artifacts` directory of this repository provides required CloudFormation templates, Parameter Files and Shell
+Script that you can use for UPI installation of OpenShift. Normally, you should not need to change any of the templates
+and will only be updating parameters `.json` files specific to your environment. The templates need to be run in the 
+specific order outlined here. For the full explanation of the parameter please refer to [OpenShift Documentation](https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html)
+
+### OpenShift Installation
 1. Login to AWS Management Console using `OpenShiftInstaller` account and connect to the Session Manager of EC2
 that you set up to run OpenShift installation
 ![Alt text](images/aws-session-manager.png?raw=true "Verify SCP")
    
 2. Verify your AWS identity  
-$ aws sts get-caller-identity   
-![Alt text](images/aws-caller-identity.png?raw=true "Verify AWS Identity")
    
-3.
+    ![Alt text](images/aws-caller-identity.png?raw=true "Verify AWS Identity")
+ 
+3. Switch to the `protectedb_openshift/artifacts` directory. (_This is the directory you cloned from Git_).
+    ![Alt text](images/artifacts-dir.png?raw=true "Verify AWS Identity")
+   
+4. Create Network Components 
+   1. Update `NetworkParams.json` file according to your environment. Note that `HostedZoneId` is your public Route 53
+      Zone and `IntDns` is your Private Route 53 zone we created earlier. We chose `App_Dev_azX_net` as our PrivateSubnet
+      and `Web_Dev_azX_net` as our Public Subnets.
+      
+   2. Run the Network script  
+       `$ ./CreateOpenshiftNetwork.sh`
+       
+   3. Wait until `OpenShiftNetwork` stack is complete. You can also use AWS Web-UI to check for progress.
+
+5. Create Security Groups
+   0. Update `SGParams.json` file according to your environment    
+   1. Run: `$ ./CreateSG.sh`
+   2. Wait until `OpenShiftSecurityGroups` stack is completed
+    
+6. Upload your boostrap config file to an AWS S3 bucket
+    1. Create an AWS S3 bucket  
+  ` $ aws s3 mb s3://<cluster-name>-infra`
+    2. Copy boostrap.ign file to the bucket. `boostrap.ign` file can be located in the `clusterconfigs` directory  
+    `$ aws s3 cp ~/clusterconfigs/bootstrap.ign s3://<cluster-name>-infra/bootstrap.ign`
+    3. Verify the file has been uploaded  
+    `$ aws s3 ls s3://<cluster-name>-infra`
+       
+7. Create Bootstrap Node
+   1. Update `BootstrapParams.json` file according to your environment. You will need the values from the outputs
+   of `Network` and `Security Groups` stacks. You can use AWS Web Console to retrieve them.
+   3. Run: `$ ./CreateBootstrap.sh`
+   4. Wait until `OpenShiftBootstrapNode` Stack is completed
+    
+8. Create Control Plane Nodes
+    1. Update `ControlPlaneParams.json`. You will need the values from the outputs
+   of `Network` and `Security Groups` stacks. `CertificateAuthorities` can be retrieved 
+       from `master.ign` file by copying the `"data:text/plain..."` section
+    2. Run `$ ./CreateControlPlane.sh` 
+    4. Wait until the Stack is completed
+    
+9. Create Compute Nodes
+    1. Compute Node 1
+         1. Update `ComputeNodeParams.json`. Please select one of your Availability zones. We use the id of `Web_Dev_aza_net` in 
+            this example. You will also need the values 
+            from the outputs of `Network` and `Security Groups` stacks. `CertificateAuthorities` can be retrieved 
+            from `worker.ign` file by copying the `"data:text/plain..."` section
+         2. Run `$ ./CreateComputeNodes.sh`   
+    2. Compute Node 2
+         1. Update `ComputeNodeParams.json`. Please select one of your other Availability zones. We use the id of `Web_Dev_azb_net` in 
+            this example. You do not need to change anything else.
+         2. Run `$ aws cloudformation create-stack --stack-name OpenShiftComputeNode2 --parameters file://ComputeNodeParams.json --template-body file://ComputeNodeTemplate.yaml`  
+    3. Wait until both stacks are completed
+    4. Login to OpenShift and approve CSRs fo worker nodes  
+       ```
+       $ export KUBECONFIG=~/clusteconfigs/auth/kubeconfig  
+       $ oc get csr
+       $ oc get csr -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | xargs --no-run-if-empty oc adm certificate approve
+       ``` 
+       Verify that you have all nodes in READY state. It might take a few minutes before all the nodes become ready.
+       You might also need to approve any additional CSR. 
+       ```
+       $ oc get csr
+       $ oc get nodes
+       ```
+11. Switch to `clusterconfigs`directory and run:  
+    `$ openshift-install wait-for bootstrap-complete`  
+    Once you see the message that Boostrap is completed you can  delete Bootstrap EC2 instance  
+    ![Alt text](images/bootstrap-completed.png?raw=true "Bootstrap Completed")
+    `$ aws cloudformation delete-stack --stack-name OpenShiftBootstrapNode`
+    
+12. Verify all cluster operators are `Running` and Not in Degraded state  
+`$ oc get co`

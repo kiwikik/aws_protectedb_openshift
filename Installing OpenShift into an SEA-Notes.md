@@ -19,44 +19,47 @@ to regenerate ignition files and update your code to include the new infrastruct
 we use SSO to easily switch between accounts
 
 2. Assume `PBMMAccel-PipelineRole`. In the switch role menu provide Pipeline role name: PBMMAccel-PipelineRole and your the account ID of
-the account that will be used to install OpenShift. In our example we use the ID of OpenShift install account.
+the account that will be used to install OpenShift. In our example we use the ID of `OpenShiftInstaller` account.
+   ![Alt text](images/switch_roles_aws.png?raw=true "Switch Roles")
 
-3. Go to IAM and create a user that will be used to install OpenShift. In this example we call it OpenShiftInstallUser
-   1. Allow programatic access
+3. Go to IAM and create a user that will be used to install OpenShift. In this example we call it `OpenShiftInstallUser`
+   1. Allow programmatic access
    2. Attach existing policy "AdministratorAccess" ^1
-   3. Record access key id and secret access key  
-      NOTE: you can create your own role following the official documentation for Red Hat OpenShift
+   3. Record `access_key_id` and `secret_access_key`  
+      **_NOTE:_** you can create your own role following the official [Red Hat documentation](https://docs.openshift.com/container-platform/latest/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account)
 
-4. Login to `OpenShiftInstaller` Account and verify that the user was created and have correct permissions
+   4. Login to `OpenShiftInstaller` Account and verify that the user was created and have correct permissions
 
 5. In `OpenShiftInstaller` account create a public DNS zone. Note this zone is used for the installer
 and will not be publicly resolved. See post-installation step on how to allow external traffic
-to your cluser. In our example we use: octank-demo.ca
+to your cluster. In our example we use: `octank-demo.ca`
 
-6. Create a small EC2 instance. It will be used to install OpenShift. In our example we use t2.xlarge but smaller instances
-should work as well. The operating system type should be AWS Linux or RHEL.  
-   NOTE: if you choose RHEL you might need to isntall
-   management utils. They are needed in order to be able to connect to the remote shell
+6. Create a small EC2 instance. It will be used to install OpenShift. In our example we use `t2.xlarge` but smaller
+   instances should work as well. The operating system type should be AWS Linux or RHEL.  
+   **_NOTE_**: if you choose RHEL you might need to install
+   management utils in order to be able to connect to the remote console
 
 7. In your web-browser go to https://cloud.redhat.com and log in with your Red Hat credentials
     7. In Red Hat OpenShift Cluster Manager click Cluster Manager link
-    7. Select create cluster. In "Run It Yourself" section select AWS and then user-provisioned infrastructure
-    7. On the screen copy links for the latest version of OpenShift installer and Command line interface
-    7. Download and save the pull secret. It will be used to pull images from internal red hat registries
+       ![Alt text](images/cluster-manager.png?raw=true "Red Hat Cluster Manager")
+    7. Select `Create Cluster`. In "Run It Yourself" section select AWS and then user-provisioned infrastructure
+    7. Copy links for the latest version of **OpenShift** installer and **Command line interface**
+    7. Download and save the **Pull Secret**. It will be used to pull images from internal Red Hat registries
     7. Close this tab
+       ![Alt text](images/upi-manager.png?raw=true "Red Hat Cluster Manager UPI")
 
-8. Connect to your EC2 instance that you created in step.X. In the console download openshift-install-linux.tar.gz
-and openshift-client-linux.tar.gz using links from the previous steps and extract them 
+8. Connect to your EC2 instance that you created in Step.6 via Session Manager. Download` openshift-install-linux.tar.gz`
+and `openshift-client-linux.tar.gz` using links from the previous step
+9. Extract the binaries   
     ```
     $ wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
     $ wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
     $ tar xfv openshift-install-linux.tar.gz
     $ tar xfv openshift-client-linux.tar.gz
     ``` 
-    For your convenience move these binaries to your system path  
-    `$ cp oc openshift-install /usr/local/bin/`
-9. Install AWS cli command following the instructions
-https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
+    __OPTIONAL__: For your convenience move these binaries to your system path  
+    `$ sudo mv oc openshift-install /usr/local/bin/`
+9. Install AWS cli command following [AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
 
 10. Run `$ aws configure`  
 For `AWS Access Key ID` provide the access key id of OpenShiftInstall user that you created  
@@ -67,7 +70,9 @@ For `Default output format` type in `json`
 11. Clone this repository  
 `$ git clone https://github.com/kiwikik/protectedb_openshift.git
 `
-12. Create a folder for storing OpenShift configuration. We call ours "clusterconfigs".
+12. Create a folder for storing OpenShift configuration. We call ours `clusterconfigs`.   
+    `$ mkdir ~/clusterconfigs`
+
 ### B. Generating OpenShift cluster configs
 For more information refer to: https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html
 1. Retrieve install-config.yaml  
@@ -84,74 +89,74 @@ generated earlier.
 5. Make sure you are in the directory where `install-config.yaml` is located.
 6. Verify you're logged in with the correct AWS credentials:  
 ` $ aws sts get-caller-identity`  
- Run openshift-install commands to create manifests  
-`openshift-install create manifests`
-7. Remove manifests for Control and Compute machines  
+ Create cluster manifests  
+`$ openshift-install create manifests`
+7. Remove manifests for **Control** and **Compute** machines  
     ```
     rm -f ~/clusterconfigs/openshift/99_openshift-cluster-api_master-machines-*.yaml
     rm -f ~/clusterconfigs/openshift/99_openshift-cluster-api_worker-machineset-*.yaml
     ```  
-8. Check that the `mastersSchedulable` parameter in the ~/clusterconfigs/manifests/cluster-scheduler-02-config.yml
+8. Check that the `mastersSchedulable` parameter in `~/clusterconfigs/manifests/cluster-scheduler-02-config.yml`
 file is set to `false`.
 9. Create ignition bootstrap files:  
     `$ openshift-install create ignition-configs`  
 
-    You should see *.ign files and an auth directory created
+    You should see `*.ign` files and an `auth` directory are created
 
 10. Extract the infrastructure name  
-    `jq -r .infraID ~/clusterconfigs/metadata.json`  
+    `$ jq -r .infraID ~/clusterconfigs/metadata.json`  
     Please save `infraID`. In our example it will be `seaocp-2mtml`
 
 ### C. Creating a private DNS zone.
 1. Log in as Account Organization Admin and then switch roles. For the `Account` specify the accountID 
-of OpenShiftInstall account (OpenShiftInstaller) and for the `Role` type in `PBMMAccel-PipelineRole` 
- ![Alt text](images/switch_roles_aws.png?raw=true "Switch Roles")	
+of `OpenShiftInstaller` account and for the `Role` type in `PBMMAccel-PipelineRole` 
+ ![Alt text](images/assume-role.png?raw=true "Assume Role")	
 2. Create a temporary vpc in your OpenShift install account
  ![Alt text](images/create_vpc.png?raw=true "Create VPC")	
 3. Create a private DNS zone in the format  
 
      `<cluster_name>.<base_domain>  `
  
-	Zone name should match the cluster name we provided in install-config.yaml file. In our example it will be:
-	seaocp.octank-demo.ca. Select the temp VPC that we created in step #2.  
+	Zone name should match the cluster name we provided in `install-config.yaml` file. In our example it will be:
+	`seaocp.octank-demo.ca`. Select the temp VPC that we created in step #2.  
 	Apply the TAGs in the following format:  
     ```
-    Key: "kubernetes.io/cluster/{InfrastructureName} Value: owned
-    Key: "Name" Value: {InfrastructureName}-int
+    Key: "kubernetes.io/cluster/{infraID} Value: owned
+    Key: "Name" Value: {infraID}-int
     ```
-    i.e.  
-    Name = seapoc-2mtml-int  
-    kubernetes.io/cluster/seapoc-2mtml = owned  
 
-    ![Alt text](images/p_dns_1.png?graw=true "Title")	
-    ![Alt text](images/p_dns_2.png?raw=true "Title")	
+    ![Alt text](images/p_dns_1.png?graw=true "DNS 1")	
+    ![Alt text](images/p_dns_2.png?raw=true "DNS 2")	
  
-4. Now we will need to create a VPC association for this DNS with our existing shared VPC.
+4. We will need to create a VPC association for DNS with our existing shared VPC.
 Refer to [AWS documentation.](https://aws.amazon.com/premiumsupport/knowledge-center/private-hosted-zone-different-account/)
 
-5. Switch back to OpenShiftInstaller account and connect to your running EC2 instance where we had AWS cli installed
+    1. Switch back to OpenShiftInstaller account and connect to your running EC2 instance where we had AWS cli installed
 and run the following commands:
     ```
     $ aws route53 list-hosted-zones 
     $ aws route53 create-vpc-association-authorization --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca=central-1,VPCId=vpc-09820xxxxx 
-    ```
-    Were:  
-    `VPCId` - is your existing private VPC shared from another account  
-    `hosted-zone-id` - is the id of your private hosted zone
+    ```  
+    **__NOTE:__**
+    * `VPCId` - is your existing private VPC shared from another account  
+    * `hosted-zone-id` - is the id of your private hosted zone
 
-6. Now we'll need to approve the association using the role that has permission to run Route 53 APIs in the Account.
-In our example we use SharedNetwork account to approve it. You can simply set env variables on your EC2 instance
-to do that. 
+6. Approve the association using the role that has permission to run Route 53 APIs in the Account.
+In our example we use `SharedNetwork` account to approve it. 
+   ![Alt text](images/shared-network.png?raw=true "Shared Network Account")
+   We can simply set environment variables on your EC2 instance
+to do that.
     ```
-    export AWS_ACCESS_KEY_ID="ASIXXXXXXX"
-    export AWS_SECRET_ACCESS_KEY="XXXXXXXXXX"
-    export AWS_SESSION_TOKEN="FXXXSSDFXXXXX"
+    $ export AWS_ACCESS_KEY_ID="ASIXXXXXXX"
+    $ export AWS_SECRET_ACCESS_KEY="XXXXXXXXXX"
+    $ export AWS_SESSION_TOKEN="FXXXSSDFXXXXX"
     ```  
     ```$ aws route53 associate-vpc-with-hosted-zone --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca-central-1,VPCId=VPCId=vpc-09820xxxxx```  
     
-    You can now delete the temp VPC. Note that VPCId is now the id of the temp network. 
+    You can now delete the temp VPC.  
+    **__NOTE:__** that `VPCId` is now the id of the temp network. 
 
-7. IMPORTANT: Exit EC2 console to remove ENV variables we just added
+7. **IMPORTANT:** Exit EC2 session manager to remove ENV variables we just added
 
 ## D. Updating SCP
 ### Pre-requirements
@@ -175,9 +180,9 @@ can be located [here](./scps/Sample.ASEA-Guardrails-Sensitive.json)._
        ![Alt text](images/scp-2.png?raw=true "AWS SCP 2")
 2. Login to AWS console as Account Organization Admin. Go to S3 console and select your SEA's central bucket. This was
 specified in your `config.json` file that you used to create your PBMM environment
-   (i.e. ` "central-bucket": "sea-aws-redhat-config"`). Select the `scp` folder. If you don't have this directory,
+   (i.e. ` "central-bucket": "sea-aws-redhat-config"`). Select the `scp` directory. If you don't have this directory,
    you need to create it.
-![Alt text](images/s3-bucket.png?raw=true "S3 Bucket") 
+    ![Alt text](images/s3-bucket.png?raw=true "S3 Bucket") 
 3. Upload your modified `ASEA-Guardrails-Sensitive.json` policy file into the scp directory. Keep other options at their 
 defaults.
    ![Alt text](images/upload-policy.png?raw=true "Policy Upload")
@@ -195,13 +200,17 @@ defaults.
 ## E. Installing OpenShift
 
 ### Pre-requirements
-* You have 3 App and 3 Web subnets in your accelerator environment
-* You cloned this repository to your EC2 instance
+* You have 3 App and 3 Web subnets in your PBMM environment
+* You completed all previous steps
 
-The `artifacts` directory of this repository provides required CloudFormation templates, Parameter Files and Shell
-Script that you can use for UPI installation of OpenShift. Normally, you should not need to change any of the templates
-and will only be updating parameters `.json` files specific to your environment. The templates need to be run in the 
-specific order outlined here. For the full explanation of the parameter please refer to [OpenShift Documentation](https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html)
+The `artifacts` directory of this repository contains the following:
+ * CloudFormation templates (.yaml)
+ * Parameter Files (.json) 
+ * Executable scripts (.sh)
+
+You should not normally need to change any of the provided CloudFormation templates.  
+Your environment parameters will be specified in the corresponding `.json` file. These templates need to be run in the 
+specific order outlined here. For the full explanation of the parameter values please refer to [OpenShift Documentation](https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html)
 
 ### OpenShift Installation
 1. Login to AWS Management Console using `OpenShiftInstaller` account and connect to the Session Manager of EC2
@@ -223,17 +232,17 @@ that you set up to run OpenShift installation
    2. Run the Network script  
        `$ ./CreateOpenshiftNetwork.sh`
        
-   3. Wait until `OpenShiftNetwork` stack is complete. You can also use AWS Web-UI to check for progress.
+   3. Wait until `OpenShiftNetwork` stack is completed. You can also use AWS Web-UI to check for progress.
 
 5. Create Security Groups
-   0. Update `SGParams.json` file according to your environment    
-   1. Run: `$ ./CreateSG.sh`
-   2. Wait until `OpenShiftSecurityGroups` stack is completed
+   1. Update `SGParams.json` file according to your environment    
+   2. Run: `$ ./CreateSG.sh`
+   3. Wait until `OpenShiftSecurityGroups` stack is completed
     
 6. Upload your boostrap config file to an AWS S3 bucket
     1. Create an AWS S3 bucket  
-  ` $ aws s3 mb s3://<cluster-name>-infra`
-    2. Copy boostrap.ign file to the bucket. `boostrap.ign` file can be located in the `clusterconfigs` directory  
+    `$ aws s3 mb s3://<cluster-name>-infra`
+    2. Copy boostrap.ign file to the bucket. `boostrap.ign` file can be located in the `~/clusterconfigs` directory  
     `$ aws s3 cp ~/clusterconfigs/bootstrap.ign s3://<cluster-name>-infra/bootstrap.ign`
     3. Verify the file has been uploaded  
     `$ aws s3 ls s3://<cluster-name>-infra`
@@ -253,8 +262,8 @@ that you set up to run OpenShift installation
     
 9. Create Compute Nodes
     1. Compute Node 1
-         1. Update `ComputeNodeParams.json`. Please select one of your Availability zones. We use the id of `Web_Dev_aza_net` in 
-            this example. You will also need the values 
+         1. Update `ComputeNodeParams.json`. Please select one of your Availability zones. We use the id of 
+            `Web_Dev_aza_net` in this example. You will also need the values 
             from the outputs of `Network` and `Security Groups` stacks. `CertificateAuthorities` can be retrieved 
             from `worker.ign` file by copying the `"data:text/plain..."` section
          2. Run `$ ./CreateComputeNodes.sh`   
@@ -277,9 +286,14 @@ that you set up to run OpenShift installation
        ```
 11. Switch to `clusterconfigs`directory and run:  
     `$ openshift-install wait-for bootstrap-complete`  
-    Once you see the message that Boostrap is completed you can  delete Bootstrap EC2 instance  
+    Once you see the message that Boostrap is completed you can delete Bootstrap EC2 instance  
     ![Alt text](images/bootstrap-completed.png?raw=true "Bootstrap Completed")
     `$ aws cloudformation delete-stack --stack-name OpenShiftBootstrapNode`
     
 12. Verify all cluster operators are `Running` and Not in Degraded state  
 `$ oc get co`
+
+##Next Steps
+
+* [Create MachineSet for Compute](./Configure_machinesets.md)
+* [Route external Application traffic into the cluste](./Route_External_Traffic.md)

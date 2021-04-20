@@ -4,6 +4,7 @@ This repository is developed to help you get started with Red Hat OpenShift on A
 1. [Installing OpenShift cluster](Installing_OpenShift_SEA.md)
 2. [Configure MachineSets](Configure_machinesets.md)
 3. [Route external traffic to your applications](Route_External_Traffic.md)
+4. [Installing OpenShift Container Storage (OCS 4.x)](Install_ocs.md)
 
 ### What is Openshift?
 OpenShift is a family of containerization software products developed by Red Hat. Its flagship product is the

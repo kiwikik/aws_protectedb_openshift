@@ -52,5 +52,7 @@ OCP version: 4.7 ASEA version: 1.3.2 OCP Deployment Method: UPI
 Getting started on deploying OpenShift using the UPI installer on AWS with PBMM guardrails
 provided by ASEA.
 For the purposes of this document, we assume that you have a standard ASEA proscribed architecture as
-defined [here](https://github.com/aws-samples/aws-secure-environmentaccelerator/blob/main/docs/operations/img/ASEA-high-level-architecture.png)
-It is assumed you have deployed ASEA following the instructions in the [installation documentation](https://github.com/aws-samples/aws-secure-environmentaccelerator/blob/main/docs/installation/installation.md)
+defined below
+![Alt text](https://github.com/aws-samples/aws-secure-environment-accelerator/blob/main/docs/operations/img/ASEA-high-level-architecture.png?raw=true "AWS PBMM")
+
+It is assumed you have deployed ASEA following the instructions in the [installation documentation](https://github.com/aws-samples/aws-secure-environment-accelerator/blob/main/docs/installation/installation.md)

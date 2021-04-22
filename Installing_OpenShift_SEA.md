@@ -84,13 +84,13 @@ zone. In metadata field specify the name of your cluster(you can choose this nam
 For `machineNetwork` specify the cidr of your shared VPC(i.e. Dev_vpc). In our example we use cidr: `10.2.0.0/16`
 Provide your pull secret that you downloaded earlier from cloud.redhat.com. Provide your ssh public key that you
 generated earlier.
-4. Backup `install-config.yaml` file. This file will be deleted after manifests are created  
+4. Backup `install-config.yaml` file. The file will be consumed and transformed into installation artifacts
 `$ cp install-config.yaml ~/install-config.yaml.backup`  
 5. Make sure you are in the directory where `install-config.yaml` is located.
 6. Verify you're logged in with the correct AWS credentials:  
 ` $ aws sts get-caller-identity`  
  Create cluster manifests  
-`$ openshift-install create manifests`
+`$ openshift-install create manifests --dir=~/clustercongis`
 7. Remove manifests for **Control** and **Compute** machines  
     ```
     rm -f ~/clusterconfigs/openshift/99_openshift-cluster-api_master-machines-*.yaml
@@ -253,14 +253,16 @@ that you set up to run OpenShift installation
    3. Run: `$ ./CreateBootstrap.sh`
    4. Wait until `OpenShiftBootstrapNode` Stack is completed
     
-8. Create Control Plane Nodes
+8. Create Control Plane Nodes.
     1. Update `ControlPlaneParams.json`. You will need the values from the outputs
    of `Network` and `Security Groups` stacks. `CertificateAuthorities` can be retrieved 
        from `master.ign` file by copying the `"data:text/plain..."` section
     2. Run `$ ./CreateControlPlane.sh` 
     4. Wait until the Stack is completed
     
-9. Create Compute Nodes
+9. Create Compute Nodes. In this example we use CloudFormation templates to create Compute nodes. We can also utilize
+   `machineSets` to create worker nodes. In this version of the documentation we configure the `machineSet` as part of 
+   the [post-installation step](Configure_machinesets.md).
     1. Compute Node 1
          1. Update `ComputeNodeParams.json`. Please select one of your Availability zones. We use the id of 
             `Web_Dev_aza_net` in this example. You will also need the values 
@@ -290,7 +292,7 @@ that you set up to run OpenShift installation
     ![Alt text](images/bootstrap-completed.png?raw=true "Bootstrap Completed")
     `$ aws cloudformation delete-stack --stack-name OpenShiftBootstrapNode`
     
-12. Verify all cluster operators are `Running` and Not in Degraded state  
+12. Verify that all the cluster operators are `Running` and are NOT in `Degraded` state  
 `$ oc get co`
 
 ##Next Steps

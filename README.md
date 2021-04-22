@@ -8,22 +8,21 @@ This repository is developed to help you get started with Red Hat OpenShift on A
 
 ### What is Openshift?
 OpenShift is a family of containerization software products developed by Red Hat. Its flagship product is the
-OpenShift Container Platform — a platform as a service built around Docker containers orchestrated and
-managed by Kubernetes on a foundation of Red Hat Enterprise Linux. RedHat has an open source variant of
-OS called OKD that we can assume will not be of interest to customers because it does not come with
-RedHat support.
+OpenShift Container Platform — a platform as a service built around container orchestration and
+managed by Kubernetes on a foundation of Red Hat Enterprise Linux. Red Hat sponsors an open source version (community) of
+OpenShift called OKD which does not come with Red Hat support.
 Read more:
 * https://www.openshift.com/
 * https://www.okd.io/
 ### As an AWS Customer how do I consume OpenShift?
-For AWS customers that are 3 different ways to use this project.
-Customer Managed: Customer uses RedHat provided installers to install OCP on AWS. The customer
+For AWS customers there are 3 different ways to use this project.
+* Customer Managed: Customer uses Red Hat provided installers to install OpenShift on AWS. The customer
 has two options IPI (Terraform based) or UPI (CloudFormation based) installer. Customer is
-responsible for the maintenance of the OCP cluster.
-OpenShift Dedicated: OSD is a RedHat offering. RedHat provides OCP as a managed service. RedHat
+responsible for the maintenance of the OpenShift cluster.
+* OpenShift Dedicated (OSD): is a Red Hat offering. Red Hat provides OpenShift as a managed service. Red Hat
 runs OSD on their own AWS infrastructure.
-RedHat OpenShift on AWS: New joint offering from AWS and RedHat. Customer enables ROSA in
-their account and uses the ROSA cli to provision a fully managed OCP cluster.
+* Red Hat OpenShift on AWS(ROSA): New joint offering from AWS and Red Hat. Customer enables ROSA in
+their account and uses the ROSA cli to provision a fully managed OpenShift cluster.
 ### What is the AWS Secure Environment Accelerator (ASEA)?
 The AWS Accelerator is a tool designed to help deploy and operate secure multi-account, multi-region AWS
 environments on an ongoing basis. The power of the solution is the configuration file that drives the
@@ -37,21 +36,20 @@ the solution to help meet the multitude of requirements of a broad range of gove
 organizations.
 The installation of the provided prescriptive architecture is reasonably simple, deploying a customized
 architecture does require extensive understanding of the [AWS platform](https://github.com/aws-samples/aws-secure-environment-accelerator).  
-**__Note__**: that you must update your ASEA config.json to deploy 3 AZ in your shared VPCs for OpenShift. As
+**__Note__**: that you must update your ASEA `config.json` to deploy three availability zones (AZ) in your shared VPCs for OpenShift. As
 deployed, your OpenShift cluster architecture will look like this:
  ![Alt text](images/aws-architecture.png?raw=true "AWS Architecture")
 
-### Why are we interested in deploying OCP on AWS with ASEA?
+### Why are we interested in deploying OpenShift on AWS with ASEA?
 Customers want the ability to deploy containerized applications in hybrid environments. Customers can
 open a new AWS Management account, deploy the ASEA and have the 12 guardails in place within a day.
-Documenting how to install OCP on top of ASEA gets the customer that much closer to being able to deploy
-containerized applications and obtain and Authority to Operate (ATO) against Canada's Protect B Medium
-Medium security profile.
+Documenting how to install OpenShift on top of ASEA gets the customer that much closer to being able to deploy
+containerized applications and obtain and Authority to Operate (ATO) against Canada's Protect B Medium security profile.
 
-### What has been tested by CANPS AWS and RedHat?
-OCP version: 4.7 ASEA version: 1.3.2 OCP Deployment Method: UPI
-Getting started on deploying OpenShift using the UPI installer on AWS with PBMM guardrails
-provided by ASEA.
+### What has been tested by CANPS AWS and Red Hat?
+* OpenShift version 4.7, ASEA version: 1.3.2  
+* OpenShift Deployment Method: UPI  
+
 For the purposes of this document, we assume that you have a standard ASEA proscribed architecture as
 defined below
 ![Alt text](https://github.com/aws-samples/aws-secure-environment-accelerator/blob/main/docs/operations/img/ASEA-high-level-architecture.png?raw=true "AWS PBMM")

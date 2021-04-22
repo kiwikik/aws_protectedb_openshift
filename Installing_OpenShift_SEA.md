@@ -36,7 +36,7 @@ to your cluster. In our example we use: `octank-demo.ca`
 
 6. Create a small EC2 instance. It will be used to install OpenShift. In our example we use `t2.xlarge` but smaller
    instances should work as well. The operating system type should be AWS Linux or RHEL.  
-   **_NOTE_**: if you choose RHEL you might need to install
+   **_NOTE:_** if you choose RHEL you might need to install
    management utils in order to be able to connect to the remote console
 
 7. In your web-browser go to https://cloud.redhat.com and log in with your Red Hat credentials
@@ -108,6 +108,12 @@ file is set to `false`.
     Please save `infraID`. In our example it will be `seaocp-2mtml`
 
 ### C. Creating a private DNS zone.
+
+_Why are we doing this?_ Due to the recent changes to AWS it's no longer possible to associate a private VPC (shared) from 
+`Account A` to a private Hosted Zone in `Account B`. This change will prevent OpenShift ingress operator from creating
+Private Hosted Zone required for OpenShift to operate. In the future versions of OpenShift it might be possible to use
+the existing Private Hosted Zone but is not supported in v.4.7.
+
 1. Log in as Account Organization Admin and then switch roles. For the `Account` specify the accountID 
 of `OpenShiftInstaller` account and for the `Role` type in `PBMMAccel-PipelineRole` 
  ![Alt text](images/assume-role.png?raw=true "Assume Role")	

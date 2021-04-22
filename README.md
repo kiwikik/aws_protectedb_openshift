@@ -15,13 +15,13 @@ Read more:
 * https://www.openshift.com/
 * https://www.okd.io/
 ### As an AWS Customer how do I consume OpenShift?
-For AWS customers there are 3 different ways to use this project.
+For AWS customers there are 3 different ways to use OpenShift on AWS.
 * Customer Managed: Customer uses Red Hat provided installers to install OpenShift on AWS. The customer
 has two options IPI (Terraform based) or UPI (CloudFormation based) installer. Customer is
 responsible for the maintenance of the OpenShift cluster.
 * OpenShift Dedicated (OSD): is a Red Hat offering. Red Hat provides OpenShift as a managed service. Red Hat
 runs OSD on their own AWS infrastructure.
-* Red Hat OpenShift on AWS(ROSA): New joint offering from AWS and Red Hat. Customer enables ROSA in
+* Red Hat OpenShift on AWS (ROSA): New joint offering from AWS and Red Hat. Customer enables ROSA in
 their account and uses the ROSA cli to provision a fully managed OpenShift cluster.
 ### What is the AWS Secure Environment Accelerator (ASEA)?
 The AWS Accelerator is a tool designed to help deploy and operate secure multi-account, multi-region AWS
@@ -36,7 +36,7 @@ the solution to help meet the multitude of requirements of a broad range of gove
 organizations.
 The installation of the provided prescriptive architecture is reasonably simple, deploying a customized
 architecture does require extensive understanding of the [AWS platform](https://github.com/aws-samples/aws-secure-environment-accelerator).  
-**__Note__**: that you must update your ASEA `config.json` to deploy three availability zones (AZ) in your shared VPCs for OpenShift. As
+**__NOTE:__** you must update your ASEA `config.json` to deploy three availability zones (AZ) in your shared VPCs for OpenShift. As
 deployed, your OpenShift cluster architecture will look like this:
  ![Alt text](images/aws-architecture.png?raw=true "AWS Architecture")
 

@@ -49,7 +49,7 @@ to your cluster. In our example we use: `octank-demo.ca`
     5. Close this tab/window
        ![Alt text](images/upi-manager.png?raw=true "Red Hat Cluster Manager UPI")
 
-8. Connect to your EC2 instance that you created in Step.6 via Session Manager. Download` openshift-install-linux.tar.gz`
+8. Connect to your EC2 instance that you created in Step.5 via Session Manager. Download` openshift-install-linux.tar.gz`
 and `openshift-client-linux.tar.gz` using links from the previous step
 9. Extract the binaries   
     ```
@@ -69,7 +69,7 @@ For `Default region` type in `ca-central-1`
 For `Default output format` type in `json`  
 
 11. Clone this repository  
-`$ git clone https://github.com/kiwikik/protectedb_openshift.git
+`$ git clone https://github.com/kiwikik/aws_protectedb_openshift.git
 `
 12. Create a folder for storing OpenShift configuration. We call ours `clusterconfigs`.   
     `$ mkdir ~/clusterconfigs`
@@ -77,7 +77,7 @@ For `Default output format` type in `json`
 ### B. Generating OpenShift cluster configs
 For more information refer to: https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html
 1. Retrieve install-config.yaml  
-`$ cp ./openshift_aws_sea/install-config.yaml ./clusterconfigs/`  
+`$ cp ./aws_protectedb_openshift/artifacts/install-config.yaml ./clusterconfigs/`  
 2. Generate private and public ssh key pairs  
 `ssh-keygen -t ed25519 -N '' -f ~/.ssh/openshift`  
 3. Update your `install-config.yaml` file. You need to make sure your `baseDomain` matches your public Route53 hosted
@@ -85,7 +85,7 @@ zone. In metadata field specify the name of your cluster(you can choose this nam
 For `machineNetwork` specify the cidr of your shared VPC(i.e. Dev_vpc). In our example we use cidr: `10.2.0.0/16`
 Provide your pull secret that you downloaded earlier from cloud.redhat.com. Provide your ssh public key that you
 generated earlier.
-4. Backup `install-config.yaml` file. The file will be consumed and transformed into installation artifacts
+4. Backup `install-config.yaml` file. The file will be consumed and transformed into installation artifacts  
 `$ cp install-config.yaml ~/install-config.yaml.backup`  
 5. Make sure you are in the directory where `install-config.yaml` is located.
 6. Verify you're logged in with the correct AWS credentials:  
@@ -228,7 +228,7 @@ that you set up to run OpenShift installation
    
     ![Alt text](images/aws-caller-identity.png?raw=true "Verify AWS Identity")
  
-3. Switch to the `protectedb_openshift/artifacts` directory. (_This is the directory you cloned from Git_).
+3. Switch to the `aws_protectedb_openshift/artifacts` directory. (_This is the directory you cloned from Git_).
     ![Alt text](images/artifacts-dir.png?raw=true "Verify AWS Identity")
    
 4. Create Network Components 

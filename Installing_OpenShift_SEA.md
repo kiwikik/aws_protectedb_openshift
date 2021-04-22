@@ -24,9 +24,10 @@ the account that will be used to install OpenShift. In our example we use the ID
 
 3. Go to IAM and create a user that will be used to install OpenShift. In this example we call it `OpenShiftInstallUser`
    1. Allow programmatic access
-   2. Attach existing policy "AdministratorAccess" ^1
+   2. Attach existing policy and choose `AdministratorAccess`
+      **_NOTE:_** you can choose to create your own role following the official [Red Hat documentation](https://docs.openshift.com/container-platform/latest/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account)
+
    3. Record `access_key_id` and `secret_access_key`  
-      **_NOTE:_** you can create your own role following the official [Red Hat documentation](https://docs.openshift.com/container-platform/latest/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account)
 
    4. Login to `OpenShiftInstaller` Account and verify that the user was created and have correct permissions
 
@@ -40,12 +41,12 @@ to your cluster. In our example we use: `octank-demo.ca`
    management utils in order to be able to connect to the remote console
 
 7. In your web-browser go to https://cloud.redhat.com and log in with your Red Hat credentials
-    7. In Red Hat OpenShift Cluster Manager click Cluster Manager link
+    1. In Red Hat OpenShift Cluster Manager click Cluster Manager link
        ![Alt text](images/cluster-manager.png?raw=true "Red Hat Cluster Manager")
-    7. Select `Create Cluster`. In "Run It Yourself" section select AWS and then user-provisioned infrastructure
-    7. Copy links for the latest version of **OpenShift** installer and **Command line interface**
-    7. Download and save the **Pull Secret**. It will be used to pull images from internal Red Hat registries
-    7. Close this tab
+    2. Select `Create Cluster`. In "Run It Yourself" section select AWS and then user-provisioned infrastructure
+    3. Copy links for the latest version of **OpenShift** installer and **Command line interface**
+    4. Download and save the **Pull Secret**. It will be used to pull images from internal Red Hat registries
+    5. Close this tab/window
        ![Alt text](images/upi-manager.png?raw=true "Red Hat Cluster Manager UPI")
 
 8. Connect to your EC2 instance that you created in Step.6 via Session Manager. Download` openshift-install-linux.tar.gz`

@@ -1,15 +1,15 @@
 [
     {
         "ParameterKey": "KMSEbsKey",
-        "ParameterValue": "alias/PBMMAccel-EBS-Key-85987D9D"
+        "ParameterValue": "<Your KMS key i.e. alias/PBMMAccel-EBS-Key-XXXXXX>"
     },
     {
         "ParameterKey": "InfrastructureName",
-        "ParameterValue": "seaocp-9npqr"
+        "ParameterValue": "<infraID>"
     },
     {
         "ParameterKey": "RhcosAmi",
-        "ParameterValue": "ami-01284e5815ce66a95"
+        "ParameterValue": "<Red Hat CoreOS AMI i.e. ami-01284e5815ce66a95>"
     },
     {
         "ParameterKey": "AllowedBootstrapSshCidr",
@@ -17,19 +17,19 @@
     },
     {
         "ParameterKey": "PublicSubnet",
-        "ParameterValue": "subnet-0c04f026c9d39d967"
+        "ParameterValue": "<subnet-id-1>"
     },
     {
         "ParameterKey": "MasterSecurityGroupId",
-        "ParameterValue": "sg-0dc7de6a995c76234"
+        "ParameterValue": "<Master Security Group ID>"
     },
     {
         "ParameterKey": "VpcId",
-        "ParameterValue": "vpc-09820d7e07cfc6bc8"
+        "ParameterValue": "<VPC id>"
     },
     {
         "ParameterKey": "BootstrapIgnitionLocation",
-        "ParameterValue": "s3://seaocp-9npqr/bootstrap.ign"
+        "ParameterValue": "<S3 path to your bootstrap.ign i.e. s3://seaocp-xxxx-infra/bootstrap.ign>"
     },
     {
         "ParameterKey": "AutoRegisterELB",
@@ -37,19 +37,19 @@
     },
     {
         "ParameterKey": "RegisterNlbIpTargetsLambdaArn",
-        "ParameterValue": "arn:aws:lambda:ca-central-1:637326788629:function:seaocpOpenshiftNetworkStack-RegisterNlbIpTargets-D3WPIGRJIQC"
+        "ParameterValue": "<arn:aws:lambda:ca-central-1:XXXX>"
     },
     {
         "ParameterKey": "ExternalApiTargetGroupArn",
-        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Exter-1583O7YW54ZJ/327bb63ffe91f60d"
+        "ParameterValue": "<arn:aws:elasticloadbalancing:ca-central-1:XXXX>"
     },
     {
         "ParameterKey": "InternalApiTargetGroupArn",
-        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Inter-NN5WTRKD0E7D/66e1a038b6899a9d"
+        "ParameterValue": "<arn:aws:elasticloadbalancing:ca-central-1:XXXX"
     },    
     {
         "ParameterKey": "InternalServiceTargetGroupArn",
-        "ParameterValue": "arn:aws:elasticloadbalancing:ca-central-1:637326788629:targetgroup/seaoc-Inter-6OVHD0COKTD5/b58577923a2e06fd"
+        "ParameterValue": "<arn:aws:elasticloadbalancing:ca-central-1:XXXX>"
     }
 
 ]

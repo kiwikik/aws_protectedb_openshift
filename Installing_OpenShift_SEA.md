@@ -91,16 +91,16 @@ generated earlier.
 6. Verify you're logged in with the correct AWS credentials:  
 ` $ aws sts get-caller-identity`  
  Create cluster manifests  
-`$ openshift-install create manifests --dir=~/clustercongis`
-7. Remove manifests for **Control** and **Compute** machines  
+`$ openshift-install create manifests --dir=<path to your clusterconfigs dir>`
+7. Remove manifests for **Control** machines  
     ```
     rm -f ~/clusterconfigs/openshift/99_openshift-cluster-api_master-machines-*.yaml
-    rm -f ~/clusterconfigs/openshift/99_openshift-cluster-api_worker-machineset-*.yaml
-    ```  
-8. Check that the `mastersSchedulable` parameter in `~/clusterconfigs/manifests/cluster-scheduler-02-config.yml`
+    ```
+      
+8. Verify that the `mastersSchedulable` parameter in `~/clusterconfigs/manifests/cluster-scheduler-02-config.yml`
 file is set to `false`.
 9. Create ignition bootstrap files:  
-    `$ openshift-install create ignition-configs`  
+    `$ openshift-install create ignition-configs --dir=<path to your clusterconfigs dir>`  
 
     You should see `*.ign` files and an `auth` directory are created
 
@@ -128,7 +128,7 @@ of `OpenShiftInstaller` account and for the `Role` type in `PBMMAccel-PipelineRo
 	`seaocp.octank-demo.ca`. Select the temp VPC that we created in step #2.  
 	Apply the TAGs in the following format:  
     ```
-    Key: "kubernetes.io/cluster/{infraID} Value: owned
+    Key: "kubernetes.io/cluster/{infraID}" Value: "owned"
     Key: "Name" Value: {infraID}-int
     ```
 
@@ -158,7 +158,7 @@ to do that.
     $ export AWS_SECRET_ACCESS_KEY="XXXXXXXXXX"
     $ export AWS_SESSION_TOKEN="FXXXSSDFXXXXX"
     ```  
-    ```$ aws route53 associate-vpc-with-hosted-zone --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca-central-1,VPCId=VPCId=vpc-09820xxxxx```  
+    ```$ aws route53 associate-vpc-with-hosted-zone --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca-central-1,VPCId=vpc-09820xxxxx```  
     
     You can now delete the temp VPC.  
     **__NOTE:__** that `VPCId` is now the id of the temp network. 
@@ -209,6 +209,7 @@ defaults.
 ### Pre-requirements
 * You have 3 App and 3 Web subnets in your PBMM environment
 * You completed all previous steps
+* You have your `infraID` parameter value
 
 The `artifacts` directory of this repository contains the following:
  * CloudFormation templates (.yaml)
@@ -232,7 +233,7 @@ that you set up to run OpenShift installation
     ![Alt text](images/artifacts-dir.png?raw=true "Verify AWS Identity")
    
 4. Create Network Components 
-   1. Update `NetworkParams.json` file according to your environment. Note that `HostedZoneId` is your public Route 53
+   1. Update `NetworkParams.json` file according to your environment. **__Where:__** `HostedZoneId` is your public Route 53
       Zone and `IntDns` is your Private Route 53 zone we created earlier. We chose `App_Dev_azX_net` as our PrivateSubnet
       and `Web_Dev_azX_net` as our Public Subnets.
       
@@ -267,42 +268,90 @@ that you set up to run OpenShift installation
     2. Run `$ ./CreateControlPlane.sh` 
     4. Wait until the Stack is completed
     
-9. Create Compute Nodes. In this example we use CloudFormation templates to create Compute nodes. We can also utilize
-   `machineSets` to create worker nodes. In this version of the documentation we configure the `machineSet` as part of 
-   the [post-installation step](Configure_machinesets.md).
-    1. Compute Node 1
-         1. Update `ComputeNodeParams.json`. Please select one of your Availability zones. We use the id of 
-            `Web_Dev_aza_net` in this example. You will also need the values 
-            from the outputs of `Network` and `Security Groups` stacks. `CertificateAuthorities` can be retrieved 
-            from `worker.ign` file by copying the `"data:text/plain..."` section
-         2. Run `$ ./CreateComputeNodes.sh`   
-    2. Compute Node 2
-         1. Update `ComputeNodeParams.json`. Please select one of your other Availability zones. We use the id of `Web_Dev_azb_net` in 
-            this example. You do not need to change anything else.
-         2. Run `$ aws cloudformation create-stack --stack-name OpenShiftComputeNode2 --parameters file://ComputeNodeParams.json --template-body file://ComputeNodeTemplate.yaml`  
-    3. Wait until both stacks are completed
-    4. Login to OpenShift and approve CSRs fo worker nodes  
-       ```
-       $ export KUBECONFIG=~/clusteconfigs/auth/kubeconfig  
-       $ oc get csr
-       $ oc get csr -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | xargs --no-run-if-empty oc adm certificate approve
-       ``` 
-       Verify that you have all nodes in READY state. It might take a few minutes before all the nodes become ready.
-       You might also need to approve any additional CSR. 
-       ```
-       $ oc get csr
-       $ oc get nodes
-       ```
-11. Switch to `clusterconfigs`directory and run:  
-    `$ openshift-install wait-for bootstrap-complete`  
+9. Switch to `clusterconfigs`directory and run:  
+    ```
+    $ cd ~/clusterconfigs
+    $ openshift-install wait-for bootstrap-complete --dir=<path to your clusterconfigs dir> 
+    ```
     Once you see the message that Boostrap is completed you can delete Bootstrap EC2 instance  
     ![Alt text](images/bootstrap-completed.png?raw=true "Bootstrap Completed")
-    `$ aws cloudformation delete-stack --stack-name OpenShiftBootstrapNode`
+    `$ aws cloudformation delete-stack --stack-name OpenShiftBootstrapNode` 
+   
+11. Login to OpenShift via CLI. 
+    Make sure you have downloaded 'oc' cli tool.
+    ```
+    $ export KUBECONFIG=~/clusterconfigs/auth/kubeconfig  
+    $ oc whoami
+    ```  
+    ![Alt text](images/ocwhoami.png?raw=true "Verify you logged in to OpenShift via CLI")
+10. Create Compute Nodes. In this example we utilize OpenShift MachineSets to create compute nodes. MachineSets should
+    have already been created during the installation process. You can also create your own MachineSets using
+    [machineSets/machineSet.yaml](machineSets/machineSet.yaml) template
     
-12. Verify that all the cluster operators are `Running` and are NOT in `Degraded` state  
-`$ oc get co`
+    1. Verify that you have 3 MachineSets available:  
+    
+    `$ oc get machinesets -n openshift-machine-api`  
+    
+    ![Alt text](images/default-machinesets.png?raw=true "MachineSets")
+    
+    2. Before updating your MachineSets you will need the values for:
+        * 'WorkerInstanceProfile' from the OpenShiftSecurityGroups CloudFormation stack output 
+        * 'WorkerSecurityGroupId' from the OpenShiftSecurityGroups CloudFormation stack output
+        * CoreOS `ami` for your region. You can obtain the latest AMI [here](https://docs.openshift.com/container-platform/latest/installing/installing_aws/installing-restricted-networks-aws.html#installation-aws-user-infra-rhcos-ami_installing-restricted-networks-aws)
+        * Names of your Compute subnetes i.e. App_Dev_aza_net, App_Dev_azb_net, App_Dev_azd_net
+       
+       We will be editing 3 MachineSets one per availability zone. Please make sure you select the correct subnet based 
+       on the MachineSet you are editing. Edit each of the existing MachineSets one-by-one and update the following:
+    
+        `$ oc edit machineset <machineset name> -n openshift-machine-api`
+    ```
+    spec:
+      metadata:
+        labels: <-- add me
+          node-role.kubernetes.io/worker: ""    <-- add me
+    ``` 
+    ```
+          iamInstanceProfile:
+            id: OpenShiftSecurityGroups-WorkerInstanceProfile-ZXXXX <-- replace me with WorkerInstanceProfile
+    ```      
+
+    ```
+      providerSpec:
+        value:
+          ami:
+            id: ami-01284e5815ce66a95 <-- replace me
+    ```
+    ```
+          securityGroups:
+            - filters:
+                - name: group-id <-- use group-id istead of tag:Name
+                  values:
+                    - sg-0180e9c119047e8b7 <-- replace me
+          subnet:
+            filters:
+              - name: tag:Name
+                values:
+                  - App_Dev_aza_net <-- replace me based on AZ   
+    ```
+    **__NOTE:__** You can refer to [this sample](machineSets/machineSet-1a.example.yaml)
+  
+    3. Scale your MachineSets by running:  
+    `oc scale --replicas=1 machineset <machineset name> -n openshift-machine-api`  
+       Repeat for the remaining 2 MachineSets
+    4. After a few minutes you should see compute machines being created.
+     ![Alt text](images/compute-machines.png?raw=true "Compute Machines")
+    5. Verify that you have 3 Control (Master) and 3 Compute (Worker) nodes
+    ![Alt text](images/all-nodes-completed.png?raw=true "All Nodes Completed")
+
+    
+11. Verify that all the cluster operators are `Running` and are NOT in `Degraded` state `$ oc get co`  
+    
+    ![Alt text](images/operators-ready.png?raw=true "Operators are healthy")
+
+12. Complete the installation. Please save your `kubeadmin` password!  
+
+`$ openshift-install wait-for install-complete --dir=<path to your clusterconfigs dir>`
 
 ##Next Steps
 
-* [Create MachineSet for Compute](./Configure_machinesets.md)
 * [Route external Application traffic into the cluste](./Route_External_Traffic.md)

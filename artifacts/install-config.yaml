@@ -1,0 +1,36 @@
+apiVersion: v1
+baseDomain: <Your Base Domain i.e. octank-demo.ca>
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    aws:
+      rootVolume:
+        kmsKeyArn: <ARN of your KMS i.e. arn:aws:kms:ca-central-1:63732XXXXX:key/cdb048c6-7rtg-4978-83d4-XXXXXX
+  replicas: 0
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform: {}
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: <Your cluster name i.e. seaocp>
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: <Your VPC CIDR>
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  aws:
+    region: ca-central-1
+publish: Internal
+credentialsMode: Mint
+pullSecret: '<Pull Secret from cloud.redhat.com>'
+sshKey: '<Your Public SSH key>'

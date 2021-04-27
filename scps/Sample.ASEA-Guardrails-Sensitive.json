@@ -69,7 +69,7 @@
           "aws:PrincipalArn": [
             "arn:aws:iam::*:role/${ACCELERATOR_PREFIX}*",
             "arn:aws:iam::*:role/${ACCELERATOR_NAME}Ops-*",
-            "arn:aws:iam::637326788629:user/OpenShiftInstallUser"
+            "arn:aws:iam::6373XXXXX:user/OpenShiftInstallUser"
           ]
         }
       }
@@ -141,7 +141,7 @@
         "ArnNotLike": {
           "aws:PrincipalARN": [
             "arn:aws:iam::*:role/${ACCELERATOR_PREFIX}*",
-            "arn:aws:iam::637326788629:user/cluster1-5fv7r-*"
+            "arn:aws:iam::63732XXXXXX:user/seaocp-2mtml-*"
           ]
         }
       }

@@ -2,22 +2,22 @@ apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
-    machine.openshift.io/cluster-api-cluster: <infraID>
-  name: <name of the machineset i.e. openshift-compute-ca-central-1a>
+    machine.openshift.io/cluster-api-cluster: seaocp-rtk9d
+  name: openshift-compute-ca-central-1a
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: <infraID>
-      machine.openshift.io/cluster-api-machineset: <name of the machineset i.e. openshift-compute-ca-central-1a>
+      machine.openshift.io/cluster-api-cluster: seaocp-rtk9d
+      machine.openshift.io/cluster-api-machineset: openshift-compute-ca-central-1a
   template:
     metadata:
       labels:
-        machine.openshift.io/cluster-api-cluster: <infraID>
+        machine.openshift.io/cluster-api-cluster: seaocp-rtk9d
         machine.openshift.io/cluster-api-machine-role: worker
         machine.openshift.io/cluster-api-machine-type: worker
-        machine.openshift.io/cluster-api-machineset: <name of the machineset i.e. openshift-compute-ca-central-1a>
+        machine.openshift.io/cluster-api-machineset: openshift-compute-ca-central-1a
     spec:
       metadata:
         labels:
@@ -25,7 +25,7 @@ spec:
       providerSpec:
         value:
           ami:
-            id: <Specify a valid Red Hat Enterprise Linux CoreOS (RHCOS) AMI for your AWS zone i.e. ami-01284e5815ce66a95>
+            id: ami-01284e5815ce66a95
           apiVersion: awsproviderconfig.openshift.io/v1beta1
           blockDevices:
             - ebs:
@@ -33,29 +33,29 @@ spec:
                 volumeSize: 120
                 volumeType: gp2
                 encrypted: true
-                kmsKeyId: <provide your KMS key alias i.e. alias/PBMMAccel-EBS-Key-AXXXX>
+                kmsKeyId: alias/PBMMAccel-EBS-Key-85987D9D
           credentialsSecret:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: <'WorkerInstanceProfile' value from the output of OpenShiftSecurityGroups CF stack>
+            id: OpenShiftSecurityGroups-WorkerInstanceProfile-ZFUKZVLSK5GU
           instanceType: m5.xlarge
           kind: AWSMachineProviderConfig
           placement:
-            availabilityZone: <AZ i.e. ca-central-1a>
+            availabilityZone: ca-central-1a
             region: ca-central-1
           securityGroups:
             - filters:
                 - name: group-id
                   values:
-                    - <WorkerSecurityGroupId from CF stack sg-0dfc857e14f70789b>
+                    - sg-0180e9c119047e8b7
           subnet:
             filters:
               - name: tag:Name
                 values:
-                  - <App Subnet Name i.e. App_Dev_aza_net>
+                  - App_Dev_aza_net
           tags:
-            - name: kubernetes.io/cluster/<infraID>
+            - name: kubernetes.io/cluster/seaocp-rtk9d
               value: owned
           userDataSecret:
             name: worker-user-data

@@ -1,15 +1,15 @@
 [
     {
         "ParameterKey": "InfrastructureName",
-        "ParameterValue": "seaocp-9npqr"
+        "ParameterValue": "<infraID>"
     },
     {
         "ParameterKey": "RhcosAmi",
-        "ParameterValue": "ami-01284e5815ce66a95"
+        "ParameterValue": "<Red Hat CoreOS AMI i.e. ami-01284e5815ce66a95>"
     },
     {
         "ParameterKey": "Subnet",
-        "ParameterValue": "subnet-0236023db2c013d92"
+        "ParameterValue": "<subnet-0236023XXXXX>"
     },
     {
         "ParameterKey": "WorkerSecurityGroupId",

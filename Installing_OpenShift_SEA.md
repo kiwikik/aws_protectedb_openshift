@@ -18,8 +18,8 @@ to regenerate ignition files and update your code to include the new infrastruct
 1. Log into your aws account using Account Administrator role. In this example
 we use SSO to easily switch between accounts
 
-2. Assume `PBMMAccel-PipelineRole`. In the switch role menu provide Pipeline role name: PBMMAccel-PipelineRole and your the account ID of
-the account that will be used to install OpenShift. In our example we use the ID of `OpenShiftInstaller` account.
+2. Assume `PBMMAccel-PipelineRole`. In the switch role menu provide Pipeline role name: PBMMAccel-PipelineRole and the
+   account ID that will be used to install OpenShift. In our example we use the ID of `OpenShiftInstaller` account.
    ![Alt text](images/switch_roles_aws.png?raw=true "Switch Roles")
 
 3. Go to IAM and create a user that will be used to install OpenShift. In this example we call it `OpenShiftInstallUser`
@@ -29,13 +29,13 @@ the account that will be used to install OpenShift. In our example we use the ID
 
    3. Record `access_key_id` and `secret_access_key`  
 
-   4. Login to `OpenShiftInstaller` Account and verify that the user was created and have correct permissions
+   4. Login to `OpenShiftInstaller` Account and verify that the user was created and has correct permissions
 
 5. In `OpenShiftInstaller` account create a public DNS zone. Note this zone is used for the installer
 and will not be publicly resolved. See post-installation step on how to allow external traffic
 to your cluster. In our example we use: `octank-demo.ca`
 
-6. Create a small EC2 instance. It will be used to install OpenShift. In our example we use `t2.xlarge` but smaller
+6. Create a small EC2 instance. It will be used to install OpenShift. Here we used `t2.xlarge` but smaller
    instances should work as well. The operating system type should be AWS Linux or RHEL.  
    **_NOTE:_** if you choose RHEL you might need to install
    management utils in order to be able to connect to the remote console
@@ -49,7 +49,7 @@ to your cluster. In our example we use: `octank-demo.ca`
     5. Close this tab/window
        ![Alt text](images/upi-manager.png?raw=true "Red Hat Cluster Manager UPI")
 
-8. Connect to your EC2 instance that you created in Step.5 via Session Manager. Download` openshift-install-linux.tar.gz`
+8. Connect to your EC2 instance that you created in Step.5 via Session Manager. Download `openshift-install-linux.tar.gz`
 and `openshift-client-linux.tar.gz` using links from the previous step
 9. Extract the binaries   
     ```

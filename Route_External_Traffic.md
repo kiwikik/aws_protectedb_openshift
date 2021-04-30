@@ -93,4 +93,4 @@ Add a wildcard CNAME in the format of *.apps.<cluster_name> and point it to the 
 In your web-browser go to https://console-openshift-console.apps.<cluster_name>.<your_public_domain>
 and verify that you can access OpenShift login screen
 
-   ![Alt text](images/openShift-login.png?raw=true "Fortigate Policy Example")
+   ![Alt text](images/OpenShift-login.png?raw=true "Fortigate Policy Example")

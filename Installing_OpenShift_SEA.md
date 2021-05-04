@@ -36,7 +36,8 @@ and will not be publicly resolved. See post-installation step on how to allow ex
 to your cluster. In our example we use: `octank-demo.ca`
 
 6. Create a small EC2 instance. It will be used to install OpenShift. Here we used `t2.xlarge` but smaller
-   instances should work as well. The operating system type should be AWS Linux or RHEL.  
+   instances should work as well. The operating system type should be AWS Linux or RHEL. Please attach `EC2-Default-SSM-AD-Role`
+   role to this instance.
    **_NOTE:_** if you choose RHEL you might need to install
    management utils in order to be able to connect to the remote console
 
@@ -69,12 +70,22 @@ For `Default region` type in `ca-central-1`
 For `Default output format` type in `json`  
 
 11. Clone this repository  
-`$ git clone https://github.com/kiwikik/aws_protectedb_openshift.git
-`
+    `$ git clone https://github.com/kiwikik/aws_protectedb_openshift.git`
+    Checkout the branch you want to use i.e.
+    `$ git checkout -b v1`
+    
 12. Create a folder for storing OpenShift configuration. We call ours `clusterconfigs`.   
     `$ mkdir ~/clusterconfigs`
 
 ### B. Generating OpenShift cluster configs
+### Pre-requirements
+Please collect and have the following values ready:
+* ARN of your EBS key
+* VPC CIDR of the VPC you will be installing OpenShift into
+* Base Domain Name (Route 53 Hosted Zone)
+* Red Hat OpenShift PullSecret (from cloud.redhat.com)
+* Your public SSH key
+
 For more information refer to: https://docs.openshift.com/container-platform/4.7/installing/installing_aws/installing-aws-user-infra.html
 1. Retrieve install-config.yaml  
 `$ cp ./aws_protectedb_openshift/artifacts/install-config.yaml ./clusterconfigs/`  
@@ -142,7 +153,7 @@ Refer to [AWS documentation.](https://aws.amazon.com/premiumsupport/knowledge-ce
 and run the following commands:
     ```
     $ aws route53 list-hosted-zones 
-    $ aws route53 create-vpc-association-authorization --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca=central-1,VPCId=vpc-09820xxxxx 
+    $ aws route53 create-vpc-association-authorization --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca-central-1,VPCId=vpc-09820xxxxx 
     ```  
     **__NOTE:__**
     * `VPCId` - is your existing private VPC shared from another account  
@@ -158,12 +169,14 @@ to do that.
     $ export AWS_SECRET_ACCESS_KEY="XXXXXXXXXX"
     $ export AWS_SESSION_TOKEN="FXXXSSDFXXXXX"
     ```  
-    ```$ aws route53 associate-vpc-with-hosted-zone --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca-central-1,VPCId=vpc-09820xxxxx```  
-    
-    You can now delete the temp VPC.  
+    ```$ aws route53 associate-vpc-with-hosted-zone --hosted-zone-id /hostedzone/Z027XXXXXXXX --vpc VPCRegion=ca-central-1,VPCId=vpc-09820xxxxx```
+7. You can now delete the temp VPC. 
+   1. Go to edit your Private Hosted Zone and remove `temp` VPC from the Associated list. You should have your shared VPC
+    be still shown.
+   2. Delete `temp` VPC. You will need to login with the account that created OR have permissions to delete this VPC in order to delete it.   
     **__NOTE:__** that `VPCId` is now the id of the temp network. 
 
-7. **IMPORTANT:** Exit EC2 session manager to remove ENV variables we just added
+8. **IMPORTANT:** Exit EC2 session manager to remove ENV variables we just added
 
 ## D. Updating SCP
 ### Pre-requirements
@@ -175,7 +188,7 @@ to do that.
 ### Updating the policy
 Download the latest `ASEA-Guardrails-Sensitive.json` policy from the [Official AWS Sea Repo](https://github.com/aws-samples/aws-secure-environment-accelerator/tree/main/reference-artifacts/SCPs).
 Note: _file name might be different for the future releases of SEA. The sample of updated policy for this example
-can be located [here](./scps/Sample.ASEA-Guardrails-Sensitive.json)._
+can be located [here](./scps/Sample.ASEA-Guardrails-Sensitive.json).
 
 1. Update the policy to allow OpenShiftInstallerUser to perform required operations in AWS.
    1. For `"Sid": "DenyNetworkSensitive"` add ARN of your `OpenShiftInstallUser`

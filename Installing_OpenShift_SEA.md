@@ -72,7 +72,10 @@ For `Default output format` type in `json`
 11. Clone this repository  
     `$ git clone https://github.com/kiwikik/aws_protectedb_openshift.git`
     Checkout the branch you want to use i.e.
-    `$ git checkout -b v1`
+    ```
+    $ git fetch
+    $ git checkout -t <remote_name>/<branch_name>
+    ```
     
 12. Create a folder for storing OpenShift configuration. We call ours `clusterconfigs`.   
     `$ mkdir ~/clusterconfigs`

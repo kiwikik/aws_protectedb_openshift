@@ -11,7 +11,7 @@ We have created a dedicated OpenShift Account called `OpenShiftInstaller` during
 will be using this account to install Red Hat OpenShift v.4.7 into AWS Protected B environment.
 You can choose to create a new account or use one of the existing SEA accounts (i.e. DEV). 
 
-You must complete this installation within 24hrs. Otherwise OpenShift certificates will expire and you will have
+**__NOTE:__** You must complete this installation within 24hrs. Otherwise OpenShift certificates will expire and you will have
 to regenerate ignition files and update your code to include the new infrastructure ID.
 
 ## A. Preparing for installation
@@ -325,6 +325,7 @@ that you set up to run OpenShift installation
       metadata:
         labels: <-- add me
           node-role.kubernetes.io/worker: ""    <-- add me
+      providerSet: ...
     ``` 
     ```
           iamInstanceProfile:

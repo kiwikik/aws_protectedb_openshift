@@ -42,14 +42,19 @@ also has a Public IP address associated to it.
 
 
 ## B. Configure Fortinet Fortigate Firewall
+Before you start. Login into the OpenShiftInstaller account. Go to `EC2` -> `Load Balancers` and 
+record the DNS name of the internal OpenShift load balancer (AWS LB type: `classic`). You can identify it by
+looking at the `Instances`. It should show your OpenShift compute nodes as targets. Record the value `internalLB`
+
 1. Log in as an administrator to FW instance A
 2. Switch your routing domain to `FG-traffic`  
    ![Alt text](images/route-domain.png?raw=true "Fortigate Route Domain")
 
-3. Go to `Policy & Object` -> `Addresses` and either create or re-use one of the addresses. In this example we use one of the
-default SEA addresses which is called `Test1-ALB-FQDN`
+3. Go to `Policy & Object` -> `Addresses` and either create or re-use one of the addresses. In this example we use one
+   of the default SEA addresses which is called `Test1-ALB-FQDN`
    
-4. Edit the address and replace the FQDN with `lbDNSname` (DNS of your NLB in AWS). Change the interface to `any`
+4. Edit the address and replace the FQDN with the DNS name of the internal OpenShift load balancer (`internalLB`). 
+   Change the interface to `any`
     ![Alt text](images/fw-address.png?raw=true "Fortigate Address")
 5. In your Fortigate console go to `Policy & Object` -> `Virtual IPs` and create or re-use one of the existing addresses.  In this example we use one of the
 default SEA addresses which is called `Test1-ALB`.
@@ -84,7 +89,7 @@ Otherwise, Fortigate will present it's certificate instead of passing it to Open
 9. If added Firewall B to your target group then you must repeat the same steps for your Firewall B instance.
 
 ## C. Update your route 53
-Add a wildcard CNAME in the format of *.apps.<cluster_name> and point it to the DNS of your ELB.
+Add a wildcard CNAME in the format of *.apps.<cluster_name> and point it to the DNS of your ELB (`lbDNSname`).
 
    ![Alt text](images/public-dns-cname.png?raw=true "Public Hosted Zone")
 

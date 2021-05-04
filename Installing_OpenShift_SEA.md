@@ -1,5 +1,6 @@
 ## Installing OpenShift 4.7 into AWS Protected B environment
-
+**__NOTE:__** These instructions are provided for product evaluation only and should not 
+be used in any **PRODUCTION** type of the environment without further review. 
 ### Pre-requisites:
 * You have a SEA environment v.1.3.2 or later 
 * You have account organization admin access to this environment

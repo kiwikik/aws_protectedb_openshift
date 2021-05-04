@@ -2,6 +2,8 @@
 
 In this section we are going to route external (outside your AWS VPC) application
 traffic to OpenShift compute nodes. The architectural diagram is shown below.
+**__NOTE:__** These instructions are provided for product evaluation only and should not 
+be used in any **PRODUCTION** type of the environment without further review. 
 
 ![Alt text](images/external-traffic-arhitecture.png?raw=true "Architecture")
 
